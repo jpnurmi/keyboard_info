@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 set(PROJECT_NAME "keyboard_layout")
-project(${PROJECT_NAME} LANGUAGES CXX)
+project(${PROJECT_NAME} LANGUAGES C CXX)
 
-# This value is used when generating builds using this plugin, so it must
-# not be changed
 set(PLUGIN_NAME "keyboard_layout_plugin")
 
 add_library(${PLUGIN_NAME} SHARED
   "keyboard_layout_plugin.cc"
+  "third_party/inih-r53/ini.c"
 )
 apply_standard_settings(${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES
@@ -18,7 +17,6 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
-# List of absolute paths to libraries that should be bundled with the plugin
 set(keyboard_layout_bundled_libraries
   ""
   PARENT_SCOPE
