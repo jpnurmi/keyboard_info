@@ -1,17 +1,17 @@
 #include "include/keyboard_layout/keyboard_layout_plugin.h"
 
-// This must be included before many other Windows headers.
 #include <windows.h>
-
-// For getPlatformVersion; remove unless needed for your plugin implementation.
-#include <VersionHelpers.h>
+#include <winnls.h>
+#include <winuser.h>
 
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
 
-#include <map>
+#include <cwchar>
+#include <filesystem>
 #include <memory>
+#include <string>
 #include <sstream>
 
 namespace {
@@ -20,18 +20,12 @@ class KeyboardLayoutPlugin : public flutter::Plugin {
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar);
 
-  KeyboardLayoutPlugin();
-
-  virtual ~KeyboardLayoutPlugin();
-
  private:
-  // Called when a method is called on this plugin's channel from Dart.
   void HandleMethodCall(
       const flutter::MethodCall<flutter::EncodableValue> &method_call,
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
 };
 
-// static
 void KeyboardLayoutPlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar) {
   auto channel =
@@ -49,24 +43,46 @@ void KeyboardLayoutPlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
-KeyboardLayoutPlugin::KeyboardLayoutPlugin() {}
+static LCID toLCID(WCHAR *klid)
+{
+  return std::wcstoul(klid, NULL, 16);
+}
 
-KeyboardLayoutPlugin::~KeyboardLayoutPlugin() {}
+static std::wstring toLocaleName(LCID lcid)
+{
+  WCHAR buffer[LOCALE_NAME_MAX_LENGTH];
+  int len = LCIDToLocaleName(lcid, buffer, LOCALE_NAME_MAX_LENGTH, 0);
+  return std::wstring(buffer, len);
+}
+
+static std::string toUTF8(const std::wstring &utf16)
+{
+  return std::filesystem::path(utf16).string();
+}
+
+static bool getKeyboardLayoutName(std::string &out)
+{
+  WCHAR klid[KL_NAMELENGTH];
+  if (!GetKeyboardLayoutName(klid)) {
+    return false;
+  }
+
+  LCID lcid = toLCID(klid);
+  std::wstring name = toLocaleName(lcid);
+  out = toUTF8(name);
+  return true;
+}
 
 void KeyboardLayoutPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-  if (method_call.method_name().compare("getPlatformVersion") == 0) {
-    std::ostringstream version_stream;
-    version_stream << "Windows ";
-    if (IsWindows10OrGreater()) {
-      version_stream << "10+";
-    } else if (IsWindows8OrGreater()) {
-      version_stream << "8";
-    } else if (IsWindows7OrGreater()) {
-      version_stream << "7";
+  if (method_call.method_name().compare("getKeyboardLayout") == 0) {
+    std::string layout;
+    if (getKeyboardLayoutName(layout)) {
+      result->Success(flutter::EncodableValue(layout));
+    } else {
+      result->Error(std::to_string(GetLastError()), "GetKeyboardLayoutName");
     }
-    result->Success(flutter::EncodableValue(version_stream.str()));
   } else {
     result->NotImplemented();
   }
