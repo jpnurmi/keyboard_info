@@ -18,6 +18,9 @@ G_DEFINE_TYPE(KeyboardLayoutPlugin, keyboard_layout_plugin, g_object_get_type())
 
 static gboolean is_kde() {
   const gchar* desktop = g_getenv("XDG_CURRENT_DESKTOP");
+  if (!desktop) {
+    return FALSE;
+  }
   g_autofree gchar* uppercase = g_utf8_strup(desktop, -1);
   return desktop && strstr(uppercase, "KDE");
 }
