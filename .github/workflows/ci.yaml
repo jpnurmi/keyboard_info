@@ -36,3 +36,17 @@ jobs:
       run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/keyboard_layout_integration_test.dart
       working-directory: example
       if: matrix.os != 'ubuntu-latest'
+
+  android:
+    runs-on: macos-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v1
+      working-directory: example
+    - name: Run Integration Tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        script: cd example && flutter drive -v --driver=test_driver/integration_test.dart --target=integration_test/keyboard_layout_integration_test.dart
