@@ -8,9 +8,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   keyboard_layout:
     path: ../
+
+dev_dependencies:
+  flutter_driver:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
