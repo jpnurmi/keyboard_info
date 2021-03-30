@@ -9,6 +9,7 @@ public class SwiftKeyboardLayoutPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    result("iOS " + UIDevice.current.systemVersion)
+    let inputModes = UITextInputMode.activeInputModes
+    result(inputModes.first?.primaryLanguage)
   }
 }
