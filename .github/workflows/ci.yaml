@@ -21,6 +21,8 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
     - name: Setup Flutter
       uses: subosito/flutter-action@v1
+      with:
+        channel: beta
     - name: Configure Flutter
       run: flutter config --enable-linux-desktop --enable-macos-desktop --enable-windows-desktop --no-enable-web
     - name: Install dependencies
