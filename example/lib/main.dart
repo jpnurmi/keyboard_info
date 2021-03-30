@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _keyboardLayout = 'Unknown';
+  String? _keyboardLayout = 'Unknown';
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String keyboardLayout;
+    String? keyboardLayout;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       keyboardLayout = await getKeyboardLayout();
