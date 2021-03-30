@@ -28,5 +28,5 @@ jobs:
     - name: Run tests
       run: flutter test
     - name: Run integration tests
-      run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/keyboard_layout_integration_test.dart
+      run: flutter drive -v --driver=test_driver/integration_test.dart --target=integration_test/keyboard_layout_integration_test.dart
       working-directory: example
