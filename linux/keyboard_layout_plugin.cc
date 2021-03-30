@@ -16,13 +16,91 @@ struct _KeyboardLayoutPlugin {
 
 G_DEFINE_TYPE(KeyboardLayoutPlugin, keyboard_layout_plugin, g_object_get_type())
 
-static const gchar* getenv_up(const gchar* key) {
-  return g_utf8_strup(g_getenv(key), -1);
+static gboolean is_kde() {
+  const gchar* desktop = g_getenv("XDG_CURRENT_DESKTOP");
+  g_autofree gchar* uppercase = g_utf8_strup(desktop, -1);
+  return desktop && strstr(uppercase, "KDE");
 }
 
-static gboolean use_xkb_layout() {
-  const gchar* desktop = getenv_up("XDG_CURRENT_DESKTOP");
-  return desktop && (strstr(desktop, "KDE") || strstr(desktop, "QT"));
+static void kde_xml_start_element(GMarkupParseContext* context,
+                                  const gchar* element_name,
+                                  const gchar** attribute_names,
+                                  const gchar** attribute_values,
+                                  gpointer user_data, GError** error) {
+  if (g_strcmp0(element_name, "item") != 0) {
+    return;
+  }
+
+  guint i = 0;
+  while (attribute_names[i] != NULL) {
+    const gchar* name = attribute_names[i];
+    if (g_strcmp0(name, "currentLayout") == 0) {
+      const gchar** layout = (const gchar**)user_data;
+      *layout = g_strdup(attribute_values[i]);
+      break;
+    }
+    ++i;
+  }
+}
+
+static const gchar* parse_kde_layout_memory(const gchar* filename) {
+  g_autofree gchar* text = NULL;
+  gsize size = 0;
+  GError* error = NULL;
+  if (!g_file_get_contents(filename, &text, &size, &error)) {
+    g_warning("layout_memory.xml: %s\n", error->message);
+    return NULL;
+  }
+
+  GMarkupParser parser;
+  memset(&parser, 0, sizeof(GMarkupParser));
+  parser.start_element = kde_xml_start_element;
+
+  gchar* layout = NULL;
+  g_autoptr(GMarkupParseContext) context =
+      g_markup_parse_context_new(&parser, GMarkupParseFlags(0), &layout, NULL);
+
+  if (!g_markup_parse_context_parse(context, text, size, &error)) {
+    g_warning("layout_memory.xml: %s\n", error->message);
+    return NULL;
+  }
+
+  if (!g_markup_parse_context_end_parse(context, &error)) {
+    g_warning("layout_memory.xml: %s\n", error->message);
+    return NULL;
+  }
+
+  return layout;
+}
+
+static int xkbrc_handler(gchar** user, const gchar* section, const gchar* name,
+                         const gchar* value) {
+  if (g_strcmp0(section, "Layout") != 0 || g_strcmp0(name, "LayoutList") != 0) {
+    return FALSE;
+  }
+
+  gchar** tokens = g_strsplit_set(value, ",(", 2);
+  *user = g_strdup(tokens[0]);
+  g_strfreev(tokens);
+  return TRUE;
+}
+
+static const gchar* parse_kde_xkbrc(const gchar* filename) {
+  const gchar* layout = NULL;
+  ini_parse(filename, (ini_handler)xkbrc_handler, &layout);
+  return layout;
+}
+
+static const gchar* get_kde_input_source() {
+  g_autofree const gchar* layout_memory = g_build_filename(
+      g_get_user_data_dir(), "kded5/keyboard/session/layout_memory.xml", NULL);
+  const gchar* layout = parse_kde_layout_memory(layout_memory);
+  if (!layout) {
+    g_autofree const gchar* kxkbrc =
+        g_build_filename(g_get_user_config_dir(), "kxkbrc", NULL);
+    layout = parse_kde_xkbrc(kxkbrc);
+  }
+  return layout;
 }
 
 static const gchar* get_input_source_setting(GSettings* settings,
@@ -71,13 +149,16 @@ static const gchar* get_xkb_layout() {
 }
 
 static const gchar* get_keyboard_layout() {
-  if (!use_xkb_layout()) {
-    const gchar* layout = get_gnome_input_source();
-    if (layout) {
-      return layout;
-    }
+  const gchar* layout = NULL;
+  if (is_kde()) {
+    layout = get_kde_input_source();
+  } else {
+    layout = get_gnome_input_source();
   }
-  return get_xkb_layout();
+  if (!layout) {
+    layout = get_xkb_layout();
+  }
+  return layout;
 }
 
 static void keyboard_layout_plugin_handle_method_call(
