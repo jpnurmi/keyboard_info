@@ -1,4 +1,4 @@
-package com.example.keyboard_layout_example
+package com.example.keyboard_info_example
 
 import io.flutter.embedding.android.FlutterActivity
 

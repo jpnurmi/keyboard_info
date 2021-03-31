@@ -1,10 +1,10 @@
 import Flutter
 import UIKit
 
-public class SwiftKeyboardLayoutPlugin: NSObject, FlutterPlugin {
+public class SwiftKeyboardInfoPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "keyboard_layout", binaryMessenger: registrar.messenger())
-    let instance = SwiftKeyboardLayoutPlugin()
+    let channel = FlutterMethodChannel(name: "keyboard_info", binaryMessenger: registrar.messenger())
+    let instance = SwiftKeyboardInfoPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 

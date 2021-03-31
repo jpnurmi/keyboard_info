@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "Demonstrates how to use the keyboard_layout plugin." "\0"
+            VALUE "FileDescription", "Demonstrates how to use the keyboard_info plugin." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "keyboard_layout_example" "\0"
+            VALUE "InternalName", "keyboard_info_example" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2021 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "keyboard_layout_example.exe" "\0"
-            VALUE "ProductName", "keyboard_layout_example" "\0"
+            VALUE "OriginalFilename", "keyboard_info_example.exe" "\0"
+            VALUE "ProductName", "keyboard_info_example" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

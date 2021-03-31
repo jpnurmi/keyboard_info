@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  keyboard_layout
+  keyboard_info
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

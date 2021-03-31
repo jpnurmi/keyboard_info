@@ -11,14 +11,14 @@ G_BEGIN_DECLS
 #define FLUTTER_PLUGIN_EXPORT
 #endif
 
-typedef struct _KeyboardLayoutPlugin KeyboardLayoutPlugin;
+typedef struct _KeyboardInfoPlugin KeyboardInfoPlugin;
 typedef struct {
   GObjectClass parent_class;
-} KeyboardLayoutPluginClass;
+} KeyboardInfoPluginClass;
 
-FLUTTER_PLUGIN_EXPORT GType keyboard_layout_plugin_get_type();
+FLUTTER_PLUGIN_EXPORT GType keyboard_info_plugin_get_type();
 
-FLUTTER_PLUGIN_EXPORT void keyboard_layout_plugin_register_with_registrar(
+FLUTTER_PLUGIN_EXPORT void keyboard_info_plugin_register_with_registrar(
     FlPluginRegistrar* registrar);
 
 G_END_DECLS

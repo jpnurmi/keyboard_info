@@ -5,8 +5,8 @@
 import FlutterMacOS
 import Foundation
 
-import keyboard_layout
+import keyboard_info
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  KeyboardLayoutPlugin.register(with: registry.registrar(forPlugin: "KeyboardLayoutPlugin"))
+  KeyboardInfoPlugin.register(with: registry.registrar(forPlugin: "KeyboardInfoPlugin"))
 }

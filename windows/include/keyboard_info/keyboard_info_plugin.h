@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-FLUTTER_PLUGIN_EXPORT void KeyboardLayoutPluginRegisterWithRegistrar(
+FLUTTER_PLUGIN_EXPORT void KeyboardInfoPluginRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
 #if defined(__cplusplus)

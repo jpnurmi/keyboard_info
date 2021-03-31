@@ -1,22 +1,21 @@
-#include "include/keyboard_layout/keyboard_layout_plugin.h"
-
-#include <windows.h>
-#include <winnls.h>
-#include <winuser.h>
+#include "include/keyboard_info/keyboard_info_plugin.h"
 
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
+#include <windows.h>
+#include <winnls.h>
+#include <winuser.h>
 
 #include <cwchar>
 #include <filesystem>
 #include <memory>
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace {
 
-class KeyboardLayoutPlugin : public flutter::Plugin {
+class KeyboardInfoPlugin : public flutter::Plugin {
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar);
 
@@ -26,14 +25,14 @@ class KeyboardLayoutPlugin : public flutter::Plugin {
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
 };
 
-void KeyboardLayoutPlugin::RegisterWithRegistrar(
+void KeyboardInfoPlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar) {
   auto channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "keyboard_layout",
+          registrar->messenger(), "keyboard_info",
           &flutter::StandardMethodCodec::GetInstance());
 
-  auto plugin = std::make_unique<KeyboardLayoutPlugin>();
+  auto plugin = std::make_unique<KeyboardInfoPlugin>();
 
   channel->SetMethodCallHandler(
       [plugin_pointer = plugin.get()](const auto &call, auto result) {
@@ -43,25 +42,19 @@ void KeyboardLayoutPlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
-static LCID toLCID(WCHAR *klid)
-{
-  return std::wcstoul(klid, NULL, 16);
-}
+static LCID toLCID(WCHAR *klid) { return std::wcstoul(klid, NULL, 16); }
 
-static std::wstring toLocaleName(LCID lcid)
-{
+static std::wstring toLocaleName(LCID lcid) {
   WCHAR buffer[LOCALE_NAME_MAX_LENGTH];
   int len = LCIDToLocaleName(lcid, buffer, LOCALE_NAME_MAX_LENGTH, 0);
   return std::wstring(buffer, len);
 }
 
-static std::string toUTF8(const std::wstring &utf16)
-{
+static std::string toUTF8(const std::wstring &utf16) {
   return std::filesystem::path(utf16).string();
 }
 
-static bool getKeyboardLayoutName(std::string &out)
-{
+static bool getKeyboardLayoutName(std::string &out) {
   WCHAR klid[KL_NAMELENGTH];
   if (!GetKeyboardLayoutName(klid)) {
     return false;
@@ -73,7 +66,7 @@ static bool getKeyboardLayoutName(std::string &out)
   return true;
 }
 
-void KeyboardLayoutPlugin::HandleMethodCall(
+void KeyboardInfoPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
   if (method_call.method_name().compare("getKeyboardLayout") == 0) {
@@ -90,9 +83,9 @@ void KeyboardLayoutPlugin::HandleMethodCall(
 
 }  // namespace
 
-void KeyboardLayoutPluginRegisterWithRegistrar(
+void KeyboardInfoPluginRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar) {
-  KeyboardLayoutPlugin::RegisterWithRegistrar(
+  KeyboardInfoPlugin::RegisterWithRegistrar(
       flutter::PluginRegistrarManager::GetInstance()
           ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar));
 }

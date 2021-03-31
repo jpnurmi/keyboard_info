@@ -4,9 +4,9 @@
 
 #include "generated_plugin_registrant.h"
 
-#include <keyboard_layout/keyboard_layout_plugin.h>
+#include <keyboard_info/keyboard_info_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
-  KeyboardLayoutPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("KeyboardLayoutPlugin"));
+  KeyboardInfoPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("KeyboardInfoPlugin"));
 }

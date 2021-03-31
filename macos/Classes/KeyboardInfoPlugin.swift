@@ -2,10 +2,10 @@ import Cocoa
 import FlutterMacOS
 import InputMethodKit
 
-public class KeyboardLayoutPlugin: NSObject, FlutterPlugin {
+public class KeyboardInfoPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "keyboard_layout", binaryMessenger: registrar.messenger)
-    let instance = KeyboardLayoutPlugin()
+    let channel = FlutterMethodChannel(name: "keyboard_info", binaryMessenger: registrar.messenger)
+    let instance = KeyboardInfoPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 

@@ -1,4 +1,4 @@
-package com.example.keyboard_layout
+package com.example.keyboard_info
 
 import androidx.annotation.NonNull
 
@@ -14,12 +14,12 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.util.Locale
 
-class KeyboardLayoutPlugin: FlutterPlugin, ActivityAware, MethodCallHandler {
+class KeyboardInfoPlugin: FlutterPlugin, ActivityAware, MethodCallHandler {
   private lateinit var channel : MethodChannel
   private var activity: Activity? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "keyboard_layout")
+    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "keyboard_info")
     channel.setMethodCallHandler(this)
   }
 

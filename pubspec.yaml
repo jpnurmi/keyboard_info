@@ -1,8 +1,8 @@
-name: keyboard_layout
-description: Retrieves the system's active keyboard layout.
-homepage: https://github.com/jpnurmi/keyboard_layout
-repository: https://github.com/jpnurmi/keyboard_layout
-issue_tracker: https://github.com/jpnurmi/keyboard_layout/issues
+name: keyboard_info
+description: Retrieves the system's active keyboard layout etc.
+homepage: https://github.com/jpnurmi/keyboard_info
+repository: https://github.com/jpnurmi/keyboard_info
+issue_tracker: https://github.com/jpnurmi/keyboard_info/issues
 version: 0.0.1
 
 environment:
@@ -21,13 +21,13 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.keyboard_layout
-        pluginClass: KeyboardLayoutPlugin
+        package: com.example.keyboard_info
+        pluginClass: KeyboardInfoPlugin
       ios:
-        pluginClass: KeyboardLayoutPlugin
+        pluginClass: KeyboardInfoPlugin
       linux:
-        pluginClass: KeyboardLayoutPlugin
+        pluginClass: KeyboardInfoPlugin
       macos:
-        pluginClass: KeyboardLayoutPlugin
+        pluginClass: KeyboardInfoPlugin
       windows:
-        pluginClass: KeyboardLayoutPlugin
+        pluginClass: KeyboardInfoPlugin

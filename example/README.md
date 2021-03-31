@@ -1,6 +1,6 @@
-# keyboard_layout_example
+# keyboard_info_example
 
-Demonstrates how to use the keyboard_layout plugin.
+Demonstrates how to use the keyboard_info plugin.
 
 ## Getting Started
 

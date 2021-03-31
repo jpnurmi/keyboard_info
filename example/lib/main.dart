@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:keyboard_layout/keyboard_layout.dart';
+import 'package:keyboard_info/keyboard_info.dart';
 
 void main() {
   runApp(MyApp());

@@ -1,4 +1,4 @@
-#include "include/keyboard_layout/keyboard_layout_plugin.h"
+#include "include/keyboard_info/keyboard_info_plugin.h"
 
 #include <flutter_linux/flutter_linux.h>
 #include <gio/gio.h>
@@ -6,15 +6,15 @@
 
 #include "third_party/inih-r53/ini.h"
 
-#define KEYBOARD_LAYOUT_PLUGIN(obj)                                     \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), keyboard_layout_plugin_get_type(), \
-                              KeyboardLayoutPlugin))
+#define KEYBOARD_LAYOUT_PLUGIN(obj)                                   \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), keyboard_info_plugin_get_type(), \
+                              KeyboardInfoPlugin))
 
-struct _KeyboardLayoutPlugin {
+struct _KeyboardInfoPlugin {
   GObject parent_instance;
 };
 
-G_DEFINE_TYPE(KeyboardLayoutPlugin, keyboard_layout_plugin, g_object_get_type())
+G_DEFINE_TYPE(KeyboardInfoPlugin, keyboard_info_plugin, g_object_get_type())
 
 static gboolean is_kde() {
   const gchar* desktop = g_getenv("XDG_CURRENT_DESKTOP");
@@ -151,7 +151,7 @@ static const gchar* get_xkb_layout() {
   return layout;
 }
 
-static const gchar* get_keyboard_layout() {
+static const gchar* get_keyboard_info() {
   const gchar* layout = NULL;
   if (is_kde()) {
     layout = get_kde_input_source();
@@ -164,14 +164,14 @@ static const gchar* get_keyboard_layout() {
   return layout;
 }
 
-static void keyboard_layout_plugin_handle_method_call(
-    KeyboardLayoutPlugin* self, FlMethodCall* method_call) {
+static void keyboard_info_plugin_handle_method_call(KeyboardInfoPlugin* self,
+                                                    FlMethodCall* method_call) {
   g_autoptr(FlMethodResponse) response = nullptr;
 
   const gchar* method = fl_method_call_get_name(method_call);
 
   if (strcmp(method, "getKeyboardLayout") == 0) {
-    g_autofree const gchar* layout = get_keyboard_layout();
+    g_autofree const gchar* layout = get_keyboard_info();
     g_autoptr(FlValue) result = fl_value_new_string(layout);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
   } else {
@@ -181,32 +181,31 @@ static void keyboard_layout_plugin_handle_method_call(
   fl_method_call_respond(method_call, response, nullptr);
 }
 
-static void keyboard_layout_plugin_dispose(GObject* object) {
-  G_OBJECT_CLASS(keyboard_layout_plugin_parent_class)->dispose(object);
+static void keyboard_info_plugin_dispose(GObject* object) {
+  G_OBJECT_CLASS(keyboard_info_plugin_parent_class)->dispose(object);
 }
 
-static void keyboard_layout_plugin_class_init(
-    KeyboardLayoutPluginClass* klass) {
-  G_OBJECT_CLASS(klass)->dispose = keyboard_layout_plugin_dispose;
+static void keyboard_info_plugin_class_init(KeyboardInfoPluginClass* klass) {
+  G_OBJECT_CLASS(klass)->dispose = keyboard_info_plugin_dispose;
 }
 
-static void keyboard_layout_plugin_init(KeyboardLayoutPlugin* self) {}
+static void keyboard_info_plugin_init(KeyboardInfoPlugin* self) {}
 
 static void method_call_cb(FlMethodChannel* channel, FlMethodCall* method_call,
                            gpointer user_data) {
-  KeyboardLayoutPlugin* plugin = KEYBOARD_LAYOUT_PLUGIN(user_data);
-  keyboard_layout_plugin_handle_method_call(plugin, method_call);
+  KeyboardInfoPlugin* plugin = KEYBOARD_LAYOUT_PLUGIN(user_data);
+  keyboard_info_plugin_handle_method_call(plugin, method_call);
 }
 
-void keyboard_layout_plugin_register_with_registrar(
+void keyboard_info_plugin_register_with_registrar(
     FlPluginRegistrar* registrar) {
-  KeyboardLayoutPlugin* plugin = KEYBOARD_LAYOUT_PLUGIN(
-      g_object_new(keyboard_layout_plugin_get_type(), nullptr));
+  KeyboardInfoPlugin* plugin = KEYBOARD_LAYOUT_PLUGIN(
+      g_object_new(keyboard_info_plugin_get_type(), nullptr));
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   g_autoptr(FlMethodChannel) channel =
       fl_method_channel_new(fl_plugin_registrar_get_messenger(registrar),
-                            "keyboard_layout", FL_METHOD_CODEC(codec));
+                            "keyboard_info", FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(
       channel, method_call_cb, g_object_ref(plugin), g_object_unref);
 

@@ -33,11 +33,11 @@ jobs:
     - name: Run tests
       run: flutter test
     - name: Run integration tests (Ubuntu)
-      run: xvfb-run -a flutter drive -v --driver=test_driver/integration_test.dart --target=integration_test/keyboard_layout_integration_test.dart
+      run: xvfb-run -a flutter drive -v --driver=test_driver/integration_test.dart --target=integration_test/keyboard_info_integration_test.dart
       working-directory: example
       if: matrix.os == 'ubuntu-latest'
     - name: Run integration tests (macOS & Windows)
-      run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/keyboard_layout_integration_test.dart
+      run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/keyboard_info_integration_test.dart
       working-directory: example
       if: matrix.os != 'ubuntu-latest'
 
@@ -52,4 +52,4 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 29
-        script: cd example && flutter drive -v --driver=test_driver/integration_test.dart --target=integration_test/keyboard_layout_integration_test.dart
+        script: cd example && flutter drive -v --driver=test_driver/integration_test.dart --target=integration_test/keyboard_info_integration_test.dart

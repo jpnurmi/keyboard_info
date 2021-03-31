@@ -1,5 +1,5 @@
-name: keyboard_layout_example
-description: Demonstrates how to use the keyboard_layout plugin.
+name: keyboard_info_example
+description: Demonstrates how to use the keyboard_info plugin.
 publish_to: 'none'
 
 environment:
@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  keyboard_layout:
+  keyboard_info:
     path: ../
 
 dev_dependencies:

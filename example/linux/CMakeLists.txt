@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "keyboard_layout_example")
-set(APPLICATION_ID "com.example.keyboard_layout")
+set(BINARY_NAME "keyboard_info_example")
+set(APPLICATION_ID "com.example.keyboard_info")
 
 cmake_policy(SET CMP0063 NEW)
 

@@ -1,4 +1,4 @@
-group 'com.example.keyboard_layout'
+group 'com.example.keyboard_info'
 version '1.0-SNAPSHOT'
 
 buildscript {

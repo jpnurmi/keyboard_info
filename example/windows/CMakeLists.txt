@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(keyboard_layout_example LANGUAGES CXX)
+project(keyboard_info_example LANGUAGES CXX)
 
-set(BINARY_NAME "keyboard_layout_example")
+set(BINARY_NAME "keyboard_info_example")
 
 cmake_policy(SET CMP0063 NEW)
 

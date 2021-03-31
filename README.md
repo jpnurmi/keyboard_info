@@ -1,4 +1,4 @@
-# keyboard_layout
+# keyboard_info
 
 A new flutter plugin project.
 
