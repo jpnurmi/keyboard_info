@@ -34,6 +34,9 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
       case 'KDE':
         info = await _getKdeKeyboardLayout();
         break;
+      case 'XFCE':
+        info = await _getXfceKeyboardLayout();
+        break;
       case 'MATE':
         info = _getMateKeyboardLayout();
         break;
@@ -53,6 +56,7 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
       if (desktop.contains('KDE')) return 'KDE';
       if (desktop.contains('MATE')) return 'MATE';
       if (desktop.contains('CINNAMON')) return 'Cinnamon';
+      if (desktop.contains('XFCE')) return 'XFCE';
     }
     return null;
   }
@@ -100,6 +104,37 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
     final keyValues = await _readKeyValues(_kxkbrcPath) ?? {};
     final layout = keyValues['LayoutList']?.split(',').firstOrNull;
     return _parseKeyboardInfo(layout ?? '');
+  }
+
+  KeyboardInfo? _parseXfceKeyboardLayout(String xml) {
+    final doc = XmlDocument.parse(xml);
+    final elements = doc.rootElement.findAllElements('property');
+    String? layout, variant;
+    for (final element in elements) {
+      final name = element.getAttribute('name');
+      if (name == 'XkbLayout') {
+        layout ??= element.getAttribute('value');
+      } else if (name == 'XkbVariant') {
+        variant ??= element.getAttribute('value');
+      }
+      if (layout != null && variant != null) break;
+    }
+    if (layout == null) return null;
+    return KeyboardInfo(
+      layout: layout.split(',').firstOrNull,
+      variant: variant?.split(',').firstOrNull,
+    );
+  }
+
+  String get _xfceConfigXmlPath =>
+      '${xdg.configHome.path}/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml';
+
+  Future<KeyboardInfo?> _getXfceKeyboardLayout() async {
+    return _fileSystem
+        .file(_xfceConfigXmlPath)
+        .readAsString()
+        .then((xml) => _parseXfceKeyboardLayout(xml))
+        .catchError((e) => null);
   }
 
   Future<KeyboardInfo> _getXkbLayout() async {

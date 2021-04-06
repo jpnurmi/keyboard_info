@@ -109,6 +109,30 @@ Use=true
     expect(info.variant, equals('mac'));
   });
 
+  test('XFCE', () async {
+    final testFileSystem = MemoryFileSystem.test();
+    final file = testFileSystem.file(
+        '${xdg.configHome.path}/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml');
+    file.createSync(recursive: true);
+    file.writeAsStringSync('''
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="keyboard-layout" version="1.0">
+  <property name="Default" type="empty">
+    <property name="XkbDisable" type="bool" value="false"/>
+    <property name="XkbLayout" type="string" value="fi,se"/>
+    <property name="XkbVariant" type="string" value="winkeys,mac"/>
+  </property>
+</channel>
+''');
+    final keyboard = KeyboardInfoLinux(
+      platform: FakePlatform('XFCE'),
+      fileSystem: testFileSystem,
+    );
+    final info = await keyboard.getKeyboardInfo();
+    expect(info.layout, equals('fi'));
+    expect(info.variant, equals('winkeys'));
+  });
+
   test('xkblayout', () async {
     final testFileSystem = MemoryFileSystem.test();
     final file = testFileSystem.file('/etc/default/keyboard');
