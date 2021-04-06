@@ -85,6 +85,20 @@ Use=true
     });
   });
 
+  group('MATE', () {
+    test('layouts', () async {
+      final keyboard = KeyboardInfoLinux(
+        platform: FakePlatform('MATE'),
+        settings: FakeSettings({
+          'layouts': ['fi\tmac', 'se\winkeys'],
+        }),
+      );
+      final info = await keyboard.getKeyboardInfo();
+      expect(info.layout, equals('fi'));
+      expect(info.variant, equals('mac'));
+    });
+  });
+
   test('xkblayout', () async {
     final testFileSystem = MemoryFileSystem.test();
     final file = testFileSystem.file('/etc/default/keyboard');

@@ -17,7 +17,7 @@ import 'package:xml/xml.dart';
 class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
   final Platform _platform;
   final FileSystem _fileSystem;
-  final GSettings _settings;
+  final GSettings? _settings;
 
   KeyboardInfoLinux(
       {@visibleForTesting Platform platform = const LocalPlatform(),
@@ -25,24 +25,32 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
       @visibleForTesting GSettings? settings})
       : _platform = platform,
         _fileSystem = fileSystem,
-        _settings =
-            settings ?? GSettings(schemaId: 'org.gnome.desktop.input-sources');
+        _settings = settings;
 
   @override
   Future<KeyboardInfo> getKeyboardInfo() async {
     KeyboardInfo? info;
-    if (_detectKde()) {
-      info = await _getKdeKeyboardLayout();
-    } else {
-      info = await _getGnomeInputSource();
+    switch (_detectDesktop()) {
+      case 'KDE':
+        info = await _getKdeKeyboardLayout();
+        break;
+      case 'MATE':
+        info = _getMateKeyboardLayout();
+        break;
+      default:
+        info = _getGnomeInputSource();
     }
     info ??= await _getXkbLayout();
     return Future.value(info);
   }
 
-  bool _detectKde() {
-    final desktop = _platform.environment['XDG_CURRENT_DESKTOP'];
-    return desktop != null && desktop.toUpperCase().contains('KDE');
+  String? _detectDesktop() {
+    final desktop = _platform.environment['XDG_CURRENT_DESKTOP']?.toUpperCase();
+    if (desktop != null) {
+      if (desktop.contains('KDE')) return 'KDE';
+      if (desktop.contains('MATE')) return 'MATE';
+    }
+    return null;
   }
 
   KeyboardInfo? _parseKeyboardInfo(String layout) {
@@ -105,8 +113,24 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
         .then((lines) => lines.toKeyValues(), onError: (_) => null);
   }
 
+  GSettings _getSettings(String schemaId) {
+    return _settings ?? GSettings(schemaId: schemaId);
+  }
+
+  KeyboardInfo? _getMateKeyboardLayout() {
+    final settings = _getSettings('org.mate.peripherals-keyboard-xkb.kbd');
+    final layouts = settings.arrayValue('layouts');
+    if (layouts.isEmpty) return null;
+    final split = (layouts.first as String?)?.split('\t');
+    return KeyboardInfo(
+      layout: split?.firstOrNull,
+      variant: split?.secondOrNull,
+    );
+  }
+
   KeyboardInfo? _getGnomeInputSourceSetting(String key, int index) {
-    final sources = _settings.arrayValue(key);
+    final settings = _getSettings('org.gnome.desktop.input-sources');
+    final sources = settings.arrayValue(key);
     if (index >= sources.length) return null;
     final tuple = sources[index] as Tuple2<Object?, Object?>;
     final split = (tuple.second as String?)?.split('+');
@@ -116,12 +140,13 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
     );
   }
 
-  Future<KeyboardInfo?> _getGnomeInputSource() async {
+  KeyboardInfo? _getGnomeInputSource() {
     final source = _getGnomeInputSourceSetting('mru-sources', 0);
     if (source != null) return source;
 
     // deprecated fallback
-    final current = _settings.intValue('current');
+    final current =
+        _getSettings('org.gnome.desktop.input-sources').intValue('current');
     return _getGnomeInputSourceSetting('sources', current);
   }
 }
