@@ -19,7 +19,7 @@ void main() async {
       file.writeAsStringSync('''
 <!DOCTYPE LayoutMap>
 <LayoutMap SwitchMode="Global" version="1.0">
-  <item currentLayout="fi"/>
+  <item currentLayout="fi(mac)"/>
 </LayoutMap>
 ''');
       final keyboard = KeyboardInfoLinux(
@@ -28,6 +28,7 @@ void main() async {
       );
       final info = await keyboard.getKeyboardInfo();
       expect(info.layout, equals('fi'));
+      expect(info.variant, equals('mac'));
     });
 
     test('kxkbrc', () async {
@@ -54,6 +55,7 @@ Use=true
       );
       final info = await keyboard.getKeyboardInfo();
       expect(info.layout, equals('no'));
+      expect(info.variant, equals('winkeys'));
     });
   });
 
@@ -62,22 +64,24 @@ Use=true
       final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
-          'mru-sources': [Tuple2('xkb', 'fi')]
+          'mru-sources': [Tuple2('xkb', 'fi+mac'), Tuple2('xkb', 'ru')]
         }),
       );
       final info = await keyboard.getKeyboardInfo();
       expect(info.layout, equals('fi'));
+      expect(info.variant, equals('mac'));
     });
 
     test('sources', () async {
       final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
-          'sources': [Tuple2('xkb', 'de'), Tuple2('xkb', 'ua')]
+          'sources': [Tuple2('xkb', 'ua'), Tuple2('xkb', 'fr+oss')]
         }),
       );
       final info = await keyboard.getKeyboardInfo();
-      expect(info.layout, equals('ua'));
+      expect(info.layout, equals('fr'));
+      expect(info.variant, equals('oss'));
     });
   });
 
@@ -97,6 +101,7 @@ XKBVARIANT=oss,
     );
     final info = await keyboard.getKeyboardInfo();
     expect(info.layout, equals('fr'));
+    expect(info.variant, equals('oss'));
   });
 }
 

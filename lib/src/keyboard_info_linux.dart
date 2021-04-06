@@ -30,16 +30,14 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
 
   @override
   Future<KeyboardInfo> getKeyboardInfo() async {
-    String? layout;
+    KeyboardInfo? info;
     if (_detectKde()) {
-      layout = await _getKdeKeyboardLayout();
+      info = await _getKdeKeyboardLayout();
     } else {
-      layout = await _getGnomeInputSource();
+      info = await _getGnomeInputSource();
     }
-    if (layout == null) {
-      layout = await _getXkbLayout();
-    }
-    return Future.value(KeyboardInfo(layout: layout));
+    info ??= await _getXkbLayout();
+    return Future.value(info);
   }
 
   bool _detectKde() {
@@ -47,12 +45,23 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
     return desktop != null && desktop.toUpperCase().contains('KDE');
   }
 
-  String? _parseCurrentKdeLayout(String xml) {
+  KeyboardInfo? _parseKeyboardInfo(String layout) {
+    final match = RegExp(r'(\w+)(?:\((\w+)\))?').firstMatch(layout);
+    if (match == null) return null;
+    return KeyboardInfo(
+      layout: match.group(1),
+      variant: match.group(2),
+    );
+  }
+
+  KeyboardInfo? _parseCurrentKdeLayout(String xml) {
     final doc = XmlDocument.parse(xml);
     final elements = doc.rootElement.findElements('item');
     for (final element in elements) {
       final layout = element.getAttribute('currentLayout');
-      if (layout != null) return layout;
+      if (layout != null) {
+        return _parseKeyboardInfo(layout);
+      }
     }
     return null;
   }
@@ -60,7 +69,7 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
   String get _kdeLayoutMemoryXmlPath =>
       '${xdg.dataHome.path}/kded5/keyboard/session/layout_memory.xml';
 
-  Future<String?> _getCurrentKdeLayout() async {
+  Future<KeyboardInfo?> _getCurrentKdeLayout() async {
     return _fileSystem
         .file(_kdeLayoutMemoryXmlPath)
         .readAsString()
@@ -68,23 +77,25 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
         .catchError((e) => null);
   }
 
-  Future<String?> _getKdeKeyboardLayout() async {
+  Future<KeyboardInfo?> _getKdeKeyboardLayout() async {
     return _getCurrentKdeLayout()
         .then((layout) async => layout ?? await _getKxkbrcLayout());
   }
 
   String get _kxkbrcPath => '${xdg.configHome.path}/kxkbrc';
 
-  Future<String?> _getKxkbrcLayout() async {
+  Future<KeyboardInfo?> _getKxkbrcLayout() async {
     final keyValues = await _readKeyValues(_kxkbrcPath) ?? {};
     final layout = keyValues['LayoutList']?.split(',').firstOrNull;
-    if (layout == null) return null;
-    return RegExp(r'(\w+)\(\w+\)').firstMatch(layout)?.group(1);
+    return _parseKeyboardInfo(layout ?? '');
   }
 
-  Future<String?> _getXkbLayout() async {
+  Future<KeyboardInfo> _getXkbLayout() async {
     final keyValues = await _readKeyValues('/etc/default/keyboard') ?? {};
-    return keyValues['XKBLAYOUT']?.split(',').firstOrNull;
+    return KeyboardInfo(
+      layout: keyValues['XKBLAYOUT']?.split(',').firstOrNull,
+      variant: keyValues['XKBVARIANT']?.split(',').firstOrNull,
+    );
   }
 
   Future<Map<String, String?>?> _readKeyValues(String path) {
@@ -94,14 +105,18 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
         .then((lines) => lines.toKeyValues(), onError: (_) => null);
   }
 
-  String? _getGnomeInputSourceSetting(String key, int index) {
+  KeyboardInfo? _getGnomeInputSourceSetting(String key, int index) {
     final sources = _settings.arrayValue(key);
     if (index >= sources.length) return null;
     final tuple = sources[index] as Tuple2<Object?, Object?>;
-    return tuple.second as String?;
+    final split = (tuple.second as String?)?.split('+');
+    return KeyboardInfo(
+      layout: split?.firstOrNull,
+      variant: split?.secondOrNull,
+    );
   }
 
-  Future<String?> _getGnomeInputSource() async {
+  Future<KeyboardInfo?> _getGnomeInputSource() async {
     final source = _getGnomeInputSourceSetting('mru-sources', 0);
     if (source != null) return source;
 
@@ -121,4 +136,5 @@ extension _StringList on List<String> {
   }
 
   String? get firstOrNull => isEmpty ? null : first;
+  String? get secondOrNull => length < 2 ? null : this[1];
 }
