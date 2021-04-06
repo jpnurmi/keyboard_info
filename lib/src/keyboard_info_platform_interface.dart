@@ -22,6 +22,11 @@ abstract class KeyboardInfoPlatformInterface extends PlatformInterface {
     return _instance!;
   }
 
+  static set instance(KeyboardInfoPlatformInterface instance) {
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
+  }
+
   Future<KeyboardInfo> getKeyboardInfo() {
     throw UnimplementedError('getKeyboardInfo() has not been implemented.');
   }
