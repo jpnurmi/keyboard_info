@@ -44,35 +44,39 @@ void KeyboardInfoPlugin::RegisterWithRegistrar(
 
 static LCID toLCID(WCHAR *klid) { return std::wcstoul(klid, NULL, 16); }
 
-static std::wstring toLocaleName(LCID lcid) {
-  WCHAR buffer[LOCALE_NAME_MAX_LENGTH];
-  int len = LCIDToLocaleName(lcid, buffer, LOCALE_NAME_MAX_LENGTH, 0);
-  return std::wstring(buffer, len);
-}
-
 static std::string toUTF8(const std::wstring &utf16) {
   return std::filesystem::path(utf16).string();
 }
 
-static bool getKeyboardLayoutName(std::string &out) {
+static std::string toLocaleName(LCID lcid) {
+  WCHAR buffer[LOCALE_NAME_MAX_LENGTH];
+  int len = LCIDToLocaleName(lcid, buffer, LOCALE_NAME_MAX_LENGTH, 0);
+  return toUTF8(std::wstring(buffer, len));
+}
+
+static bool getKeyboardInfo(std::string &layout, std::string &variant) {
   WCHAR klid[KL_NAMELENGTH];
   if (!GetKeyboardLayoutName(klid)) {
     return false;
   }
 
   LCID lcid = toLCID(klid);
-  std::wstring name = toLocaleName(lcid);
-  out = toUTF8(name);
+  layout = toLocaleName(LOWORD(lcid));
+  /// ### TODO: variant
   return true;
 }
 
 void KeyboardInfoPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-  if (method_call.method_name().compare("getKeyboardLayout") == 0) {
-    std::string layout;
-    if (getKeyboardLayoutName(layout)) {
-      result->Success(flutter::EncodableValue(layout));
+  if (method_call.method_name().compare("getKeyboardInfo") == 0) {
+    std::string layout, variant;
+    if (getKeyboardInfo(layout, variant)) {
+      flutter::EncodableMap info{
+        {flutter::EncodableValue("layout"), flutter::EncodableValue(layout)},
+        {flutter::EncodableValue("variant"), flutter::EncodableValue(variant)},
+      };
+      result->Success(flutter::EncodableValue(info));
     } else {
       result->Error(std::to_string(GetLastError()), "GetKeyboardLayoutName");
     }
