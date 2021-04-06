@@ -85,18 +85,28 @@ Use=true
     });
   });
 
-  group('MATE', () {
-    test('layouts', () async {
-      final keyboard = KeyboardInfoLinux(
-        platform: FakePlatform('MATE'),
-        settings: FakeSettings({
-          'layouts': ['fi\tmac', 'se\winkeys'],
-        }),
-      );
-      final info = await keyboard.getKeyboardInfo();
-      expect(info.layout, equals('fi'));
-      expect(info.variant, equals('mac'));
-    });
+  test('MATE', () async {
+    final keyboard = KeyboardInfoLinux(
+      platform: FakePlatform('MATE'),
+      settings: FakeSettings({
+        'layouts': ['fi\tmac', 'se\winkeys'],
+      }),
+    );
+    final info = await keyboard.getKeyboardInfo();
+    expect(info.layout, equals('fi'));
+    expect(info.variant, equals('mac'));
+  });
+
+  test('Cinnamon', () async {
+    final keyboard = KeyboardInfoLinux(
+      platform: FakePlatform('Cinnamon'),
+      settings: FakeSettings({
+        'layouts': ['fi\tmac', 'se\winkeys'],
+      }),
+    );
+    final info = await keyboard.getKeyboardInfo();
+    expect(info.layout, equals('fi'));
+    expect(info.variant, equals('mac'));
   });
 
   test('xkblayout', () async {

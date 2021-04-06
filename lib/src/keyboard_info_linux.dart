@@ -37,6 +37,9 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
       case 'MATE':
         info = _getMateKeyboardLayout();
         break;
+      case 'Cinnamon':
+        info = _getCinnamonKeyboardLayout();
+        break;
       default:
         info = _getGnomeInputSource();
     }
@@ -49,6 +52,7 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
     if (desktop != null) {
       if (desktop.contains('KDE')) return 'KDE';
       if (desktop.contains('MATE')) return 'MATE';
+      if (desktop.contains('CINNAMON')) return 'Cinnamon';
     }
     return null;
   }
@@ -117,27 +121,32 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
     return _settings ?? GSettings(schemaId: schemaId);
   }
 
+  KeyboardInfo? _splitKeyboardInfo(String? id, String separator) {
+    if (id == null) return null;
+    final split = id.split(separator);
+    return KeyboardInfo(
+      layout: split.firstOrNull,
+      variant: split.secondOrNull,
+    );
+  }
+
   KeyboardInfo? _getMateKeyboardLayout() {
     final settings = _getSettings('org.mate.peripherals-keyboard-xkb.kbd');
     final layouts = settings.arrayValue('layouts');
-    if (layouts.isEmpty) return null;
-    final split = (layouts.first as String?)?.split('\t');
-    return KeyboardInfo(
-      layout: split?.firstOrNull,
-      variant: split?.secondOrNull,
-    );
+    return _splitKeyboardInfo(layouts.firstOrNull as String?, '\t');
+  }
+
+  KeyboardInfo? _getCinnamonKeyboardLayout() {
+    final settings = _getSettings('org.gnome.libgnomekbd.keyboard');
+    final layouts = settings.arrayValue('layouts');
+    return _splitKeyboardInfo(layouts.firstOrNull as String?, '\t');
   }
 
   KeyboardInfo? _getGnomeInputSourceSetting(String key, int index) {
     final settings = _getSettings('org.gnome.desktop.input-sources');
     final sources = settings.arrayValue(key);
-    if (index >= sources.length) return null;
-    final tuple = sources[index] as Tuple2<Object?, Object?>;
-    final split = (tuple.second as String?)?.split('+');
-    return KeyboardInfo(
-      layout: split?.firstOrNull,
-      variant: split?.secondOrNull,
-    );
+    final tuple = sources.valueOrNull(index) as Tuple2<Object?, Object?>?;
+    return _splitKeyboardInfo(tuple?.second as String?, '+');
   }
 
   KeyboardInfo? _getGnomeInputSource() {
@@ -159,7 +168,10 @@ extension _StringList on List<String> {
       return MapEntry(parts.first, parts.last);
     }));
   }
+}
 
-  String? get firstOrNull => isEmpty ? null : first;
-  String? get secondOrNull => length < 2 ? null : this[1];
+extension _ListOrNull<T> on List<T> {
+  T? get firstOrNull => valueOrNull(0);
+  T? get secondOrNull => valueOrNull(1);
+  T? valueOrNull(int index) => index >= length ? null : this[index];
 }
