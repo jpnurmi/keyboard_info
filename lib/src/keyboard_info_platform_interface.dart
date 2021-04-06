@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:keyboard_info/src/keyboard_info.dart';
 import 'package:keyboard_info/src/keyboard_info_linux.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:keyboard_info/src/keyboard_info_method_channel.dart';
@@ -21,7 +22,7 @@ abstract class KeyboardInfoPlatformInterface extends PlatformInterface {
     return _instance!;
   }
 
-  Future<String?> getKeyboardLayout() {
-    throw UnimplementedError('getKeyboardLayout() has not been implemented.');
+  Future<KeyboardInfo> getKeyboardInfo() {
+    throw UnimplementedError('getKeyboardInfo() has not been implemented.');
   }
 }

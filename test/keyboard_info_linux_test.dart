@@ -22,11 +22,12 @@ void main() async {
   <item currentLayout="fi"/>
 </LayoutMap>
 ''');
-      final info = KeyboardInfoLinux(
+      final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('KDE'),
         fileSystem: testFileSystem,
       );
-      expect(await info.getKeyboardLayout(), equals('fi'));
+      final info = await keyboard.getKeyboardInfo();
+      expect(info.layout, equals('fi'));
     });
 
     test('kxkbrc', () async {
@@ -47,33 +48,36 @@ ShowSingle=false
 SwitchMode=Desktop
 Use=true
 ''');
-      final info = KeyboardInfoLinux(
+      final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('KDE'),
         fileSystem: testFileSystem,
       );
-      expect(await info.getKeyboardLayout(), equals('no'));
+      final info = await keyboard.getKeyboardInfo();
+      expect(info.layout, equals('no'));
     });
   });
 
   group('GNOME', () {
     test('mru-sources', () async {
-      final info = KeyboardInfoLinux(
+      final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
           'mru-sources': [Tuple2('xkb', 'fi')]
         }),
       );
-      expect(await info.getKeyboardLayout(), equals('fi'));
+      final info = await keyboard.getKeyboardInfo();
+      expect(info.layout, equals('fi'));
     });
 
     test('sources', () async {
-      final info = KeyboardInfoLinux(
+      final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
           'sources': [Tuple2('xkb', 'de'), Tuple2('xkb', 'ua')]
         }),
       );
-      expect(await info.getKeyboardLayout(), equals('ua'));
+      final info = await keyboard.getKeyboardInfo();
+      expect(info.layout, equals('ua'));
     });
   });
 
@@ -86,12 +90,13 @@ XKBLAYOUT=fr,us
 BACKSPACE=guess
 XKBVARIANT=oss,
 ''');
-    final info = KeyboardInfoLinux(
+    final keyboard = KeyboardInfoLinux(
       platform: FakePlatform(),
       settings: FakeSettings(),
       fileSystem: testFileSystem,
     );
-    expect(await info.getKeyboardLayout(), equals('fr'));
+    final info = await keyboard.getKeyboardInfo();
+    expect(info.layout, equals('fr'));
   });
 }
 

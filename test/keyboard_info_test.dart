@@ -9,7 +9,7 @@ void main() {
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return 'fi';
+      return <String, dynamic>{'layout': 'fi'};
     });
   });
 
@@ -17,7 +17,8 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await getKeyboardLayout(), 'fi');
+  test('getkeyboardInfo', () async {
+    final info = await getKeyboardInfo();
+    expect(info.layout, 'fi');
   });
 }

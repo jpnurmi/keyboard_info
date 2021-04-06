@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String? _keyboardLayout = 'Unknown';
+  KeyboardInfo? _keyboardInfo;
 
   @override
   void initState() {
@@ -24,12 +24,12 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String? keyboardLayout;
+    KeyboardInfo? keyboardInfo;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      keyboardLayout = await getKeyboardLayout();
-    } on PlatformException {
-      keyboardLayout = 'Failed to get keyboard layout.';
+      keyboardInfo = await getKeyboardInfo();
+    } on PlatformException catch (e) {
+      print(e);
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _keyboardLayout = keyboardLayout;
+      _keyboardInfo = keyboardInfo;
     });
   }
 
@@ -47,10 +47,33 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Keyboard layout example'),
+          title: const Text('Keyboard info example'),
         ),
         body: Center(
-          child: Text('Keyboard layout: $_keyboardLayout\n'),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Layout:'),
+                  SizedBox(height: 20),
+                  Text('Variant:'),
+                ],
+              ),
+              SizedBox(width: 10),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${_keyboardInfo?.layout}'),
+                  SizedBox(height: 20),
+                  Text('${_keyboardInfo?.variant}'),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:file/local.dart';
 import 'package:gsettings/gsettings.dart';
 import 'package:meta/meta.dart';
 import 'package:more/more.dart';
+import 'package:keyboard_info/src/keyboard_info.dart';
 import 'package:keyboard_info/src/keyboard_info_platform_interface.dart';
 import 'package:platform/platform.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
@@ -28,7 +29,7 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
             settings ?? GSettings(schemaId: 'org.gnome.desktop.input-sources');
 
   @override
-  Future<String?> getKeyboardLayout() async {
+  Future<KeyboardInfo> getKeyboardInfo() async {
     String? layout;
     if (_detectKde()) {
       layout = await _getKdeKeyboardLayout();
@@ -38,7 +39,7 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
     if (layout == null) {
       layout = await _getXkbLayout();
     }
-    return Future.value(layout);
+    return Future.value(KeyboardInfo(layout: layout));
   }
 
   bool _detectKde() {
