@@ -3,7 +3,7 @@ description: Provides API for querying information about the system's keyboard.
 homepage: https://github.com/jpnurmi/keyboard_info
 repository: https://github.com/jpnurmi/keyboard_info
 issue_tracker: https://github.com/jpnurmi/keyboard_info/issues
-version: 0.1.0
+version: 0.1.0+1
 
 environment:
   sdk: '>=2.12.0 <3.0.0'

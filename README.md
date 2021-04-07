@@ -11,11 +11,13 @@ This Flutter plugin provides API for querying information about the system's key
 ## Usage
 
 ```dart
-import 'package:keyboard_info/keyboard_info.dart`
+import 'package:keyboard_info/keyboard_info.dart';
 
-final KeyboardInfo info = await getKeyboardInfo();
-print(info.layout);
-print(info.variant);
+void main() async {
+  final KeyboardInfo info = await getKeyboardInfo();
+  print(info.layout); // "fi"
+  print(info.variant); // "mac"
+}
 ```
 
 ## Platform Support
