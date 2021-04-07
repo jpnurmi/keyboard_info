@@ -22,10 +22,75 @@ void main() async {
 
 ## Platform Support
 
-| Platform | Layout | Variant | Notes |
-|---|---|---|---|
-| Android | ✔ | ❌ | • [`InputMethodManager.getCurrentInputMethodSubtype()`](https://developer.android.com/reference/android/view/inputmethod/InputMethodManager#getCurrentInputMethodSubtype())<br/>• [`InputMethodSubtype.getLanguageTag()`](https://developer.android.com/reference/android/view/inputmethod/InputMethodSubtype#getLanguageTag())
-| iOS | ✔ | ❌ | • [`UITextInputMode.activeInputModes`](https://developer.apple.com/documentation/uikit/uitextinputmode/1614522-activeinputmodes)<br/>• [`UITextInputMode.primaryLanguage`](https://developer.apple.com/documentation/uikit/uitextinputmode/1614535-primarylanguage)
-| Linux | ✔ | ✔ |  • Cinnamon: `org.gnome.libgnomekbd.keyboard layouts`<br/>• GNOME:<br/>&nbsp;&nbsp;⁃ `org.gnome.desktop.input-sources mru-sources`<br/>&nbsp;&nbsp;⁃ `org.gnome.desktop.input-sources sources`<br/>• KDE:<br/>&nbsp;&nbsp;⁃ `~/.local/share/kded5/keyboard/session/layout_memory.xml`<br/>&nbsp;&nbsp;⁃ `~/.config/kxkbrc`<br/>• MATE: `org.mate.peripherals-keyboard-xkb.kbd layouts`<br/>• XFCE: `~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml`<br/>• Fallback: `/etc/default/keyboard`
-| macOS | ✔ | ✔ | • `TISCopyCurrentKeyboardInputSource()`<br/>• `TISGetInputSourceProperty()`<br/>&nbsp;&nbsp;⁃ `kTISPropertyInputSourceLanguages`<br/>&nbsp;&nbsp;⁃ `kTISPropertyInputSourceID`
-| Windows | ✔ | ❌ | • [`GetKeyboardLayoutName()`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardlayoutnamew)<br/>• [`LCIDToLocaleName()`](https://docs.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-lcidtolocalename)
+<table>
+  <tr><th>Platform</th><th>Layout</th><th>Variant</th><th>Notes</th></tr>
+  <tr>
+    <td>Android</td><td>✔</td><td>❌</td>
+    <td>
+      <ul>
+        <li><a href="https://developer.android.com/reference/android/view/inputmethod/InputMethodManager#getCurrentInputMethodSubtype()"><tt>InputMethodManager.getCurrentInputMethodSubtype()</tt></a></li>
+        <li><a href="https://developer.android.com/reference/android/view/inputmethod/InputMethodSubtype#getLanguageTag()"><tt>InputMethodSubtype.getLanguageTag()</tt></a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>iOS</td><td>✔</td><td>❌</td>
+    <td>
+      <ul>
+        <li><a href="https://developer.apple.com/documentation/uikit/uitextinputmode/1614522-activeinputmodes"><tt>UITextInputMode.activeInputModes</tt></a></li>
+        <li><a href="https://developer.apple.com/documentation/uikit/uitextinputmode/1614535-primarylanguage"><tt>UITextInputMode.primaryLanguage</tt></a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>Linux</td><td>✔</td><td>✔</td>
+    <td>
+      <ul>
+        <li>Cinnamon:
+          <ul><li><tt>org.gnome.libgnomekbd.keyboard layouts</tt></li></ul>
+        </li>
+        <li>GNOME:
+          <ul>
+            <li><tt>org.gnome.desktop.input-sources mru-sources</tt></li>
+            <li><tt>org.gnome.desktop.input-sources sources</tt></li>
+          </ul>
+        </li>
+        <li>KDE:
+          <ul>
+            <li><tt>~/.local/share/kded5/keyboard/session/layout_memory.xml<tt></li>
+            <li><tt>~/.config/kxkbrc<tt></li>
+          </ul>
+        </li>
+        <li>MATE:
+          <ul><li><tt>org.mate.peripherals-keyboard-xkb.kbd layouts</tt></li></ul>
+        </li>
+        <li>XFCE:
+          <ul><li><tt>~/.config/xfce4/xfconf/xfce-perchannel-xml/keyboard-layout.xml</tt></li></ul>
+        </li>
+        <li>Fallback: <tt>/etc/default/keyboard</tt></li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>macOS</td><td>✔</td><td>✔</td>
+    <td>
+      <ul>
+        <li><tt>TISCopyCurrentKeyboardInputSource()</tt></li>
+        <li><tt>TISGetInputSourceProperty()</tt></li>
+        <ul>
+          <li><tt>kTISPropertyInputSourceLanguages</tt></li>
+          <li><tt>kTISPropertyInputSourceID</tt></li>
+        </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>Windows</td><td>✔</td><td>❌</td>
+    <td>
+      <ul>
+        <li><a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardlayoutnamew"><tt>GetKeyboardLayoutName()</tt></a></li>
+        <li><a href="https://docs.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-lcidtolocalename"><tt>LCIDToLocaleName()</tt></a></li>
+      </ul>
+    </td>
+  </tr>
+</table>
