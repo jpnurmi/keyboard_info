@@ -1,5 +1,5 @@
 name: keyboard_info
-description: Provides API for querying information about the system keyboard.
+description: Provides API for querying information about the system's keyboard.
 homepage: https://github.com/jpnurmi/keyboard_info
 repository: https://github.com/jpnurmi/keyboard_info
 issue_tracker: https://github.com/jpnurmi/keyboard_info/issues
