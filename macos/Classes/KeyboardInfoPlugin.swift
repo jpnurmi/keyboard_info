@@ -11,14 +11,25 @@ public class KeyboardInfoPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
-    case "getKeyboardLayout":
+    case "getKeyboardInfo":
       let source = TISCopyCurrentKeyboardInputSource().takeUnretainedValue()
-      let value = TISGetInputSourceProperty(source, kTISPropertyInputSourceLanguages)
-      if (value != nil) {
-        let languages = Unmanaged<AnyObject>.fromOpaque(value!).takeUnretainedValue() as? Array<String>
-        result(languages?.first)
+
+      var layouts:Array<String>?;
+      let sourceLang = TISGetInputSourceProperty(source, kTISPropertyInputSourceLanguages)
+      if (sourceLang != nil) {
+        layouts = Unmanaged<AnyObject>.fromOpaque(sourceLang!).takeUnretainedValue() as? Array<String>
       }
-      result(nil)
+
+      var variant:String?;
+      let sourceId = TISGetInputSourceProperty(source, kTISPropertyInputSourceID)
+      if (sourceId != nil) {
+        variant = Unmanaged<AnyObject>.fromOpaque(sourceId!).takeUnretainedValue() as? String
+      }
+
+      result([
+        "layout": layouts?.first,
+        "variant": variant
+      ]);
     default:
       result(FlutterMethodNotImplemented)
     }
