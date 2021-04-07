@@ -9,6 +9,8 @@ import 'package:more/tuple.dart';
 import 'package:platform/platform.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
 
+bool get isLinux => const LocalPlatform().isLinux;
+
 void main() {
   group('KDE', () {
     test('layout_memory.xml', () async {
@@ -89,7 +91,7 @@ Use=true
       expect(info.layout, equals('fr'));
       expect(info.variant, equals('oss'));
     });
-  });
+  }, skip: !isLinux);
 
   test('MATE', () async {
     final keyboard = KeyboardInfoLinux(
@@ -101,7 +103,7 @@ Use=true
     final info = await keyboard.getKeyboardInfo();
     expect(info.layout, equals('fi'));
     expect(info.variant, equals('mac'));
-  });
+  }, skip: !isLinux);
 
   test('Cinnamon', () async {
     final keyboard = KeyboardInfoLinux(
@@ -113,7 +115,7 @@ Use=true
     final info = await keyboard.getKeyboardInfo();
     expect(info.layout, equals('fi'));
     expect(info.variant, equals('mac'));
-  });
+  }, skip: !isLinux);
 
   test('XFCE', () async {
     final testFileSystem = MemoryFileSystem.test();
@@ -137,7 +139,7 @@ Use=true
     final info = await keyboard.getKeyboardInfo();
     expect(info.layout, equals('fi'));
     expect(info.variant, equals('winkeys'));
-  });
+  }, skip: !isLinux);
 
   test('xkblayout', () async {
     final testFileSystem = MemoryFileSystem.test();
@@ -156,7 +158,7 @@ XKBVARIANT=oss,
     final info = await keyboard.getKeyboardInfo();
     expect(info.layout, equals('fr'));
     expect(info.variant, equals('oss'));
-  });
+  }, skip: !isLinux);
 }
 
 class FakePlatform extends LocalPlatform {
