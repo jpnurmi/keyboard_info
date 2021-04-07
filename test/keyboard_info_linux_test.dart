@@ -9,7 +9,7 @@ import 'package:more/tuple.dart';
 import 'package:platform/platform.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
 
-void main() async {
+void main() {
   group('KDE', () {
     test('layout_memory.xml', () async {
       final testFileSystem = MemoryFileSystem.test();
@@ -64,7 +64,10 @@ Use=true
       final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
-          'mru-sources': [Tuple2('xkb', 'fi+mac'), Tuple2('xkb', 'ru')]
+          'mru-sources': [
+            const Tuple2('xkb', 'fi+mac'),
+            const Tuple2('xkb', 'ru'),
+          ]
         }),
       );
       final info = await keyboard.getKeyboardInfo();
@@ -76,7 +79,10 @@ Use=true
       final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
-          'sources': [Tuple2('xkb', 'ua'), Tuple2('xkb', 'fr+oss')]
+          'sources': [
+            const Tuple2('xkb', 'ua'),
+            const Tuple2('xkb', 'fr+oss'),
+          ]
         }),
       );
       final info = await keyboard.getKeyboardInfo();
@@ -89,7 +95,7 @@ Use=true
     final keyboard = KeyboardInfoLinux(
       platform: FakePlatform('MATE'),
       settings: FakeSettings({
-        'layouts': ['fi\tmac', 'se\winkeys'],
+        'layouts': ['fi\tmac', 'se\twinkeys'],
       }),
     );
     final info = await keyboard.getKeyboardInfo();
@@ -101,7 +107,7 @@ Use=true
     final keyboard = KeyboardInfoLinux(
       platform: FakePlatform('Cinnamon'),
       settings: FakeSettings({
-        'layouts': ['fi\tmac', 'se\winkeys'],
+        'layouts': ['fi\tmac', 'se\twinkeys'],
       }),
     );
     final info = await keyboard.getKeyboardInfo();
@@ -167,8 +173,9 @@ class FakePlatform extends LocalPlatform {
 }
 
 // ignore: must_be_immutable
+// ignore: avoid_implementing_value_types
 class FakeSettings implements GSettings {
-  Map<String, List<Object?>>? _values;
+  final Map<String, List<Object?>>? _values;
   FakeSettings([Map<String, List<Object?>>? values]) : _values = values;
 
   @override

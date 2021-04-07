@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 @immutable
 class KeyboardInfo extends Equatable {
   /// Constructs a KeyboardInfo with [layout] and [variant].
-  KeyboardInfo({required this.layout, this.variant});
+  const KeyboardInfo({required this.layout, this.variant});
 
   /// The keyboard layout name.
   final String? layout;
@@ -22,10 +22,10 @@ class KeyboardInfo extends Equatable {
   }
 
   /// Constructs a KeyboardInfo instance from JSON.
-  static KeyboardInfo fromJson(Map<String, dynamic> json) {
+  factory KeyboardInfo.fromJson(Map<String, dynamic> json) {
     return KeyboardInfo(
-      layout: json['layout'],
-      variant: json['variant'],
+      layout: json['layout'] as String?,
+      variant: json['variant'] as String?,
     );
   }
 

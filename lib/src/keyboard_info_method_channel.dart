@@ -10,7 +10,7 @@ import 'package:keyboard_info/src/keyboard_info_platform_interface.dart';
 
 class KeyboardInfoMethodChannel extends KeyboardInfoPlatformInterface {
   @visibleForTesting
-  MethodChannel channel = MethodChannel('keyboard_info');
+  final channel = const MethodChannel('keyboard_info');
 
   @override
   Future<KeyboardInfo> getKeyboardInfo() {
