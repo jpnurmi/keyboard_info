@@ -59,7 +59,7 @@ Use=true
       expect(info.layout, equals('no'));
       expect(info.variant, equals('winkeys'));
     });
-  });
+  }, skip: !isLinux);
 
   group('GNOME', () {
     test('mru-sources', () async {
