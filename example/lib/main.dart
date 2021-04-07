@@ -50,28 +50,13 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Keyboard info example'),
         ),
         body: Center(
-          child: Row(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Layout:'),
-                  SizedBox(height: 20),
-                  Text('Variant:'),
-                ],
-              ),
-              SizedBox(width: 10),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${_keyboardInfo?.layout}'),
-                  SizedBox(height: 20),
-                  Text('${_keyboardInfo?.variant}'),
-                ],
-              )
+              Text('Layout: ${_keyboardInfo?.layout}'),
+              SizedBox(height: 10),
+              Text('Variant: ${_keyboardInfo?.variant}'),
             ],
           ),
         ),

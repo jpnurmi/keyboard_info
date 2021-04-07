@@ -10,7 +10,7 @@ void main() {
   testWidgets('verify keyboard layout', (WidgetTester tester) async {
     app.main();
     await tester.pumpAndSettle();
-    final pattern = RegExp(r'Keyboard layout: \w+');
+    final pattern = RegExp(r'Layout: \w+');
     expect(find.textContaining(pattern), findsOneWidget);
   });
 }
