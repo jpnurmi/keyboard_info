@@ -44,8 +44,10 @@ class KeyboardInfoPlugin: FlutterPlugin, ActivityAware, MethodCallHandler {
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    if (call.method == "getKeyboardLayout") {
-      result.success(getKeyboardLayout())
+    if (call.method == "getKeyboardInfo") {
+      result.success(mapOf(
+        "layout" to getKeyboardLayout()
+      ))
     } else {
       result.notImplemented()
     }
