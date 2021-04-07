@@ -10,6 +10,8 @@ public class SwiftKeyboardInfoPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     let inputModes = UITextInputMode.activeInputModes
-    result(inputModes.first?.primaryLanguage)
+    result([
+      "layout": inputModes.first?.primaryLanguage
+    ])
   }
 }
