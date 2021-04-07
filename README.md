@@ -57,7 +57,7 @@ void main() async {
         </li>
         <li>KDE:
           <ul>
-            <li><tt>~/.local/share/kded5/keyboard/session/layout_memory.xml<tt></li>
+            <li><tt>~/.local/share/kded5/keyboard/session/layout_memory.xml</tt></li>
             <li><tt>~/.config/kxkbrc</tt></li>
           </ul>
         </li>
