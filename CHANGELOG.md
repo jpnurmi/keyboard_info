@@ -1,3 +1,7 @@
+## 0.1.0+3
+
+* Cosmetic README tweak.
+
 ## 0.1.0+2
 
 * Fix README.
