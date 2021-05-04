@@ -85,6 +85,14 @@ void main() async {
     </td>
   </tr>
   <tr>
+    <td>Web</td><td>❌</td><td>❌</td>
+    <td>
+      <ul>
+        <li>Not available (stubbed)</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
     <td>Windows</td><td>✔</td><td>❌</td>
     <td>
       <ul>
