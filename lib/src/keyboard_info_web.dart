@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -18,7 +19,9 @@ class KeyboardInfoWeb {
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'getKeyboardInfo':
-        return <String, dynamic>{};
+        return <String, dynamic>{
+          'layout': window.navigator.language.split('-').last.toLowerCase(),
+        };
       default:
         throw PlatformException(code: 'Unimplemented', details: call.method);
     }

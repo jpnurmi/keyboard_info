@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Use Navigator.language for layout on Web.
+
 ## 0.1.1
 
 * Add stub implementation for Web.
