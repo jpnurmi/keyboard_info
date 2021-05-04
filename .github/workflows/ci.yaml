@@ -118,3 +118,18 @@ jobs:
       run: flutter build ios --release --no-codesign
       working-directory: example
       if: matrix.os == 'ios'
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v1
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v1
+      with:
+        channel: beta
+    - name: Install dependencies
+      run: flutter pub get
+    - name: Build (Web)
+      run: flutter build web
+      working-directory: example
