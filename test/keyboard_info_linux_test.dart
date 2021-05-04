@@ -3,7 +3,7 @@ import 'dart:ffi' as ffi;
 import 'package:file/memory.dart';
 import 'package:gsettings/gsettings.dart';
 import 'package:gsettings/src/bindings.dart' as ffi;
-import 'package:keyboard_info/src/keyboard_info_linux.dart';
+import 'package:keyboard_info/src/linux/keyboard_info_linux_real.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:more/tuple.dart';
 import 'package:platform/platform.dart';
