@@ -1,3 +1,7 @@
+## 0.1.1
+
+* Add stub implementation for Web.
+
 ## 0.1.0+4
 
 * Another cosmetic README tweak.

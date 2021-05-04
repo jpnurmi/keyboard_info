@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:keyboard_info/src/keyboard_info.dart';
 import 'package:keyboard_info/src/keyboard_info_linux.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -16,7 +17,7 @@ abstract class KeyboardInfoPlatformInterface extends PlatformInterface {
 
   static KeyboardInfoPlatformInterface get instance {
     if (_instance == null) {
-      if (Platform.isLinux) _instance = KeyboardInfoLinux();
+      if (!kIsWeb && Platform.isLinux) _instance = KeyboardInfoLinux();
       _instance ??= KeyboardInfoMethodChannel();
     }
     return _instance!;
