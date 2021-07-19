@@ -1,11 +1,8 @@
-import 'dart:ffi' as ffi;
-
+import 'package:dbus/src/dbus_value.dart';
 import 'package:file/memory.dart';
 import 'package:gsettings/gsettings.dart';
-import 'package:gsettings/src/bindings.dart' as ffi;
-import 'package:keyboard_info/src/linux/keyboard_info_linux_real.dart';
+import 'package:keyboard_info/src/keyboard_info_linux.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:more/tuple.dart';
 import 'package:platform/platform.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
 
@@ -66,10 +63,10 @@ Use=true
       final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
-          'mru-sources': [
-            const Tuple2('xkb', 'fi+mac'),
-            const Tuple2('xkb', 'ru'),
-          ]
+          'mru-sources': DBusArray(DBusSignature('(ss)'), [
+            DBusStruct(const [DBusString('xkb'), DBusString('fi+mac')]),
+            DBusStruct(const [DBusString('xkb'), DBusString('ru')]),
+          ]),
         }),
       );
       final info = await keyboard.getKeyboardInfo();
@@ -81,10 +78,12 @@ Use=true
       final keyboard = KeyboardInfoLinux(
         platform: FakePlatform('GNOME'),
         settings: FakeSettings({
-          'sources': [
-            const Tuple2('xkb', 'ua'),
-            const Tuple2('xkb', 'fr+oss'),
-          ]
+          'mru-sources': DBusArray(DBusSignature('(ss)'), []),
+          'current': DBusUint32(1),
+          'sources': DBusArray(DBusSignature('(ss)'), [
+            DBusStruct(const [DBusString('xkb'), DBusString('ua')]),
+            DBusStruct(const [DBusString('xkb'), DBusString('fr+oss')]),
+          ]),
         }),
       );
       final info = await keyboard.getKeyboardInfo();
@@ -97,7 +96,7 @@ Use=true
     final keyboard = KeyboardInfoLinux(
       platform: FakePlatform('MATE'),
       settings: FakeSettings({
-        'layouts': ['fi\tmac', 'se\twinkeys'],
+        'layouts': DBusArray.string(['fi\tmac', 'se\twinkeys']),
       }),
     );
     final info = await keyboard.getKeyboardInfo();
@@ -109,7 +108,7 @@ Use=true
     final keyboard = KeyboardInfoLinux(
       platform: FakePlatform('Cinnamon'),
       settings: FakeSettings({
-        'layouts': ['fi\tmac', 'se\twinkeys'],
+        'layouts': DBusArray.string(['fi\tmac', 'se\twinkeys']),
       }),
     );
     final info = await keyboard.getKeyboardInfo();
@@ -152,7 +151,11 @@ XKBVARIANT=oss,
 ''');
     final keyboard = KeyboardInfoLinux(
       platform: FakePlatform(),
-      settings: FakeSettings(),
+      settings: FakeSettings({
+        'mru-sources': DBusArray(DBusSignature('(ss)'), []),
+        'current': DBusUint32(0),
+        'sources': DBusArray(DBusSignature('(ss)'), []),
+      }),
       fileSystem: testFileSystem,
     );
     final info = await keyboard.getKeyboardInfo();
@@ -174,77 +177,38 @@ class FakePlatform extends LocalPlatform {
   }
 }
 
-// ignore: must_be_immutable
-// ignore: avoid_implementing_value_types
 class FakeSettings implements GSettings {
-  final Map<String, List<Object?>>? _values;
-  FakeSettings([Map<String, List<Object?>>? values]) : _values = values;
+  final Map<String, DBusValue> _values;
+  FakeSettings(Map<String, DBusValue> values) : _values = values;
 
   @override
-  int intValue(String key) => 1;
-  @override
-  List<Object?> arrayValue(String key) => _values?[key] ?? [];
+  Future<void> close() async {}
 
   @override
-  Object? value(String key) => throw UnimplementedError();
+  Future<DBusValue> get(String name) async => _values[name]!;
+
   @override
-  void apply() => throw UnimplementedError();
+  Stream<List<String>> get keysChanged => throw UnimplementedError();
+
   @override
-  bool boolValue(String key) => throw UnimplementedError();
+  Future<List<String>> list() => throw UnimplementedError();
+
   @override
-  List<int?> byteArrayValue(String key) => throw UnimplementedError();
+  String get schemaName => throw UnimplementedError();
+
   @override
-  GSettings child(String name) => throw UnimplementedError();
+  Future<void> set(String name, DBusValue values) => throw UnimplementedError();
+
   @override
-  List<String> children() => throw UnimplementedError();
+  Future<DBusValue> getDefault(String name) => throw UnimplementedError();
+
   @override
-  Object? defaultValue(String key) => throw UnimplementedError();
+  Future<bool> isSet(String name) => throw UnimplementedError();
+
   @override
-  void delay() => throw UnimplementedError();
+  Future<void> setAll(Map<String, DBusValue?> values) =>
+      throw UnimplementedError();
+
   @override
-  Map<Object, Object?> dictValue(String key) => throw UnimplementedError();
-  @override
-  void dispose() => throw UnimplementedError();
-  @override
-  double doubleValue(String key) => throw UnimplementedError();
-  @override
-  int enumValue(String key) => throw UnimplementedError();
-  @override
-  int flagsValue(String key) => throw UnimplementedError();
-  @override
-  bool hasUnapplied() => throw UnimplementedError();
-  @override
-  bool isWritable(String key) => throw UnimplementedError();
-  @override
-  Object? maybeValue(String key) => throw UnimplementedError();
-  @override
-  String get path => throw UnimplementedError();
-  @override
-  List<Object> get props => throw UnimplementedError();
-  @override
-  void resetValue(String key) => throw UnimplementedError();
-  @override
-  void revert() => throw UnimplementedError();
-  @override
-  String get schemaId => throw UnimplementedError();
-  @override
-  bool setEnumValue(String key, int value) => throw UnimplementedError();
-  @override
-  bool setFlagsValue(String key, int value) => throw UnimplementedError();
-  @override
-  bool setValue(String key, Object value) => throw UnimplementedError();
-  @override
-  List<String?> stringArrayValue(String key) => throw UnimplementedError();
-  @override
-  String stringValue(String key) => throw UnimplementedError();
-  @override
-  bool? get stringify => throw UnimplementedError();
-  @override
-  void sync() => throw UnimplementedError();
-  @override
-  ffi.Pointer<ffi.GSettings> toPointer() => throw UnimplementedError();
-  @override
-  Tuple tupleValue(String key) => throw UnimplementedError();
-  @override
-  Object? userValue(String key) => throw UnimplementedError();
+  Future<void> unset(String name) => throw UnimplementedError();
 }
