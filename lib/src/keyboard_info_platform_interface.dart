@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:keyboard_info/src/keyboard_info.dart';
 import 'package:keyboard_info/src/keyboard_info_linux.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:keyboard_info/src/keyboard_info_method_channel.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 // ignore_for_file: public_member_api_docs
 

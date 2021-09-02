@@ -4,9 +4,9 @@ import 'package:dbus/dbus.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:gsettings/gsettings.dart';
-import 'package:meta/meta.dart';
 import 'package:keyboard_info/src/keyboard_info.dart';
 import 'package:keyboard_info/src/keyboard_info_platform_interface.dart';
+import 'package:meta/meta.dart';
 import 'package:platform/platform.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
 import 'package:xml/xml.dart';
@@ -108,7 +108,8 @@ class KeyboardInfoLinux extends KeyboardInfoPlatformInterface {
   KeyboardInfo? _parseXfceKeyboardLayout(String xml) {
     final doc = XmlDocument.parse(xml);
     final elements = doc.rootElement.findAllElements('property');
-    String? layout, variant;
+    String? layout;
+    String? variant;
     for (final element in elements) {
       final name = element.getAttribute('name');
       if (name == 'XkbLayout') {

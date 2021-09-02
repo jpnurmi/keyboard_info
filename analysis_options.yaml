@@ -1,5 +1,9 @@
 include: package:lint/analysis_options_package.yaml
 
+analyzer:
+  exclude:
+    - "test/*.dart"
+
 linter:
   rules:
-    sort_pub_dependencies: false
+    require_trailing_commas: false
