@@ -4,7 +4,7 @@
 [![license: BSD](https://img.shields.io/badge/license-BSD-yellow.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![style: lint](https://img.shields.io/badge/style-lint-4BC0F5.svg)](https://pub.dev/packages/lint)
 ![CI](https://github.com/jpnurmi/keyboard_info/workflows/CI/badge.svg)
-[![codecov](https://codecov.io/gh/jpnurmi/keyboard_info/branch/master/graph/badge.svg)](https://codecov.io/gh/jpnurmi/keyboard_info)
+[![codecov](https://codecov.io/gh/jpnurmi/keyboard_info/branch/main/graph/badge.svg)](https://codecov.io/gh/jpnurmi/keyboard_info)
 
 This Flutter plugin provides API for querying information about the system's keyboard.
 
