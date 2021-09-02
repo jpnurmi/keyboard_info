@@ -1,3 +1,7 @@
+## 0.2.0
+
+* Migrate to gsettings.dart 0.2.0
+
 ## 0.1.1
 
 * Add stub implementation for Web.
